@@ -20,11 +20,7 @@ def getMovingAVG(movingAVGLength):
 		movingAVG.append((x,float(avg/movingAVGLength)))
 	return movingAVG
 
-l1 = LineString(getMovingAVG(3))
-l2 = LineString(getMovingAVG(15))
 
-intersection = l1.intersection(l2)
-intersect_points = [list(p.coords)[0] for p in intersection]
 print intersect_points
 
 a = getMovingAVG(3)
@@ -32,3 +28,19 @@ b = getMovingAVG(15)
 plt.plot(*zip(*a))
 plt.plot(*zip(*b))
 plt.show()
+
+bestFitness1 = None
+bestFitness2 = None
+bestfitnessIntersection = 0
+for x in range(0, len(listOfMovingAVG)-2):
+	for y in range(x+1, len(listOfMovingAVG)-1):
+		l1 = LineString(listOfMovingAVG[x])
+		l2 = LineString(listOfMovingAVG[y])
+
+		intersection = l1.intersection(l2)
+		intersect_points = [list(p.coords)[0] for p in intersection]
+		if len(intersect_points) > bestfitnessIntersection:
+			bestFitness1 = x
+			bestFitness2 = y
+listOfMovingAVG.insert(0, mylist.pop(mylist.index(bestFitness1)))
+listOfMovingAVG.insert(1, mylist.pop(mylist.index(bestFitness2)))
