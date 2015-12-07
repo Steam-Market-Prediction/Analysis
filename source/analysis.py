@@ -4,6 +4,18 @@ from pprint import pprint
 with open('Market List/Demon Eater.txt') as data_file:
 	data = json.load(data_file);
 
+def getMovingAVG(movingAVGLength):
+	movingAVG = []
+	listOfPoints = []
+	for point in data["prices"]:
+		listOfPoints.append(point[1])
+	for x in range(movingAVGLength,len(data["prices"])):
+		avg = 0.0
+		for y in range(x-movingAVGLength, x):
+			avg = listOfPoints[y] + avg
+		movingAVG.append(float(avg/movingAVGLength))
+	print movingAVG
+
 #usage: data['prices'][DATE][PRICE]
 
 def generate_population(MA_length):
@@ -16,5 +28,5 @@ def generate_population(MA_length):
 		current -= 1
 	return population
 
-
+getMovingAVG(500)
 print generate_population(3)
