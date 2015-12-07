@@ -8,7 +8,7 @@ with open('Market List/Demon Eater.txt') as data_file:
 	data = json.load(data_file);
 #data['prices'][DATE][PRICE]
 
-def getMovingAVGasTuples(movingAVGLength):
+def getMovingAVG(movingAVGLength):
 	movingAVG = []
 	listOfPoints = []
 	for point in data["prices"]:
@@ -19,27 +19,16 @@ def getMovingAVGasTuples(movingAVGLength):
 			avg = listOfPoints[y] + avg
 		movingAVG.append((x,float(avg/movingAVGLength)))
 	return movingAVG
-def getMovingAVGasArrays(movingAVGLength):
-	movingAVG = []
-	listOfPoints = []
-	for point in data["prices"]:
-		listOfPoints.append(point[1])
-	for x in range(movingAVGLength,len(data["prices"])):
-		avg = 0.0
-		for y in range(x-movingAVGLength, x):
-			avg = listOfPoints[y] + avg
-		movingAVG.append([x,float(avg/movingAVGLength)])
-	return movingAVG
 
-l1 = LineString(getMovingAVGasTuples(3))
-l2 = LineString(getMovingAVGasTuples(15))
+l1 = LineString(getMovingAVG(3))
+l2 = LineString(getMovingAVG(15))
 
 intersection = l1.intersection(l2)
 intersect_points = [list(p.coords)[0] for p in intersection]
 print intersect_points
 
-a = getMovingAVGasArrays(3)
-b = getMovingAVGasArrays(15)
+a = getMovingAVG(3)
+b = getMovingAVG(15)
 plt.plot(*zip(*a))
 plt.plot(*zip(*b))
 plt.show()
