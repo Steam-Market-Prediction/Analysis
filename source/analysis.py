@@ -31,15 +31,17 @@ def getMovingAVG(movingAVGLength):
 		movingAVG.append((x,float(avg/movingAVGLength)))
 	return movingAVG
 
+#a = getMovingAVG(3)
+#b = getMovingAVG(15)
+#plt.plot(*zip(*a))
+#plt.plot(*zip(*b))
+#plt.show()
 
-print intersect_points
-
-a = getMovingAVG(3)
-b = getMovingAVG(15)
-plt.plot(*zip(*a))
-plt.plot(*zip(*b))
-plt.show()
-
+population = generateRandomPopulation()
+listOfMovingAVG = []
+for element in population:
+	listOfMovingAVG.append(getMovingAVG(element))
+print listOfMovingAVG
 
 bestFitness1 = None
 bestFitness2 = None
@@ -57,9 +59,4 @@ for x in range(0, len(listOfMovingAVG)-2):
 listOfMovingAVG.insert(0, mylist.pop(mylist.index(bestFitness1)))
 listOfMovingAVG.insert(1, mylist.pop(mylist.index(bestFitness2)))
 
-population = generateRandomPopulation()
-population_MAs = []
-for element in population:
-	population_MAs.append(getMovingAVG(element))
-print population_MAs
 
