@@ -31,6 +31,7 @@ def getMovingAVG(movingAVGLength):
 		movingAVG.append((x,float(avg/movingAVGLength)))
 	return movingAVG
 
+
 #a = getMovingAVG(3)
 #b = getMovingAVG(15)
 #plt.plot(*zip(*a))
@@ -41,22 +42,31 @@ population = generateRandomPopulation()
 listOfMovingAVG = []
 for element in population:
 	listOfMovingAVG.append(getMovingAVG(element))
-print listOfMovingAVG
+print len(listOfMovingAVG)
 
 bestFitness1 = None
 bestFitness2 = None
 bestfitnessIntersection = 0
-for x in range(0, len(listOfMovingAVG)-2):
-	for y in range(x+1, len(listOfMovingAVG)-1):
+for x in range(0, len(listOfMovingAVG)-1):
+	for y in range(x+1, len(listOfMovingAVG)):
 		l1 = LineString(listOfMovingAVG[x])
 		l2 = LineString(listOfMovingAVG[y])
 
 		intersection = l1.intersection(l2)
-		intersect_points = [list(p.coords)[0] for p in intersection]
+		try:
+			intersect_points = [list(p.coords)[0] for p in intersection]
+		except:
+			intersect_points = list(intersection.coords)
+
+
 		if len(intersect_points) > bestfitnessIntersection:
 			bestFitness1 = x
 			bestFitness2 = y
-listOfMovingAVG.insert(0, mylist.pop(mylist.index(bestFitness1)))
-listOfMovingAVG.insert(1, mylist.pop(mylist.index(bestFitness2)))
+			bestfitnessIntersection = len(intersect_points)
+
+listOfMovingAVG.insert(0, listOfMovingAVG.pop(bestFitness1))
+
+listOfMovingAVG.insert(1, listOfMovingAVG.pop(bestFitness2))
+
 
 
