@@ -23,4 +23,6 @@ def getMovingAVG(movingAVGLength):
 
 a = getMovingAVG(3)
 plt.plot(*zip(*a))
+b = getMovingAVG(15)
+plt.plot(*zip(*b))
 plt.show()
