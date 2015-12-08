@@ -6,11 +6,12 @@ import random
 from shapely.geometry import LineString
 from random import randint
 
-with open('Market List/Fiery Soul of the Slayer.txt') as data_file:
+with open('Market List/Dragonclaw Hook.txt') as data_file:
 	data = json.load(data_file);
 #data['prices'][DATE][PRICE]
 
 POPULATION_SIZE = 10
+BUY = False
 def generateRandomPopulation():
 	population = []
 	lower = 20
@@ -100,16 +101,20 @@ class Population:
 					if pair[0][0][listOfXinl1.index((float(int(item[0]) + 1)))][1] > pair[0][1][listOfXinl2.index((float(int(item[0]) + 1)))][1]:
 						tempProfit = tempProfit - item[1] #buy
 						currentStock = currentStock + 1
+						BUY = True
 					else:
 						tempProfit = tempProfit + (item[1] * currentStock) #sell
 						currentStock = 0
+						BUY = False
 				else: # x is long term, y is short term
 					if pair[0][1][listOfXinl2.index((float(int(item[0]) + 1)))][1] > pair[0][0][listOfXinl1.index((float(int(item[0]) + 1)))][1]:
 						tempProfit = tempProfit + (item[1] * currentStock) #selectionResults
 						currentStock = 0
+						BUY = False
 					else:
 						tempProfit = tempProfit - item[1] #buy
 						currentStock = currentStock + 1
+						BUY = True
 
 
 			evaluatePairFitness = (pair, tempProfit)
@@ -177,7 +182,7 @@ def start_algorithm():
 
 		if newPopulation.selectionResults[0][1] > maxProfit:
 			maxProfit = newPopulation.selectionResults[0][1]
-			print "New Max: " ,maxProfit, "Length: ", newPopulation.selectionResults[0][0][1], newPopulation.selectionResults[0][0][2]
+			print "New Max: " ,maxProfit, "Length: ", newPopulation.selectionResults[0][0][1], newPopulation.selectionResults[0][0][2], "Buy: ", BUY
 
 		newPopulation.select()
 		newPopulation.crossover()
