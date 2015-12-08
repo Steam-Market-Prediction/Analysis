@@ -21,8 +21,8 @@ def generateRandomPopulation():
 
 def generateNewLength():
 	population = []
-	lower = len(data['prices']) / 4
-	upper = len(data['prices']) * 3 / 4
+	lower = 20
+	upper = 200
 	for i in xrange(0,2):
 		population.append(randint(lower,upper))
 	return population
