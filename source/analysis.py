@@ -192,8 +192,8 @@ def start_algorithm():
 	newPopulation = Population();
 	maxProfit = 0
 	numGenerations = 0
+	standardDeviation = []
 	while(numGenerations < 2000):
-		standardDeviation = []
 		newPopulation.evaluate()
 		standardDeviation.append(newPopulation.selectionResults[0][1])
 		if newPopulation.selectionResults[0][1] > maxProfit:
