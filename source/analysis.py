@@ -191,16 +191,14 @@ class Population:
 def start_algorithm():
 	newPopulation = Population();
 	maxProfit = 0
-
 	numGenerations = 0
-	while(numGenerations < 1000000):
+	while(numGenerations < 2000):
 		standardDeviation = []
-		print numGenerations
 		newPopulation.evaluate()
 		standardDeviation.append(newPopulation.selectionResults[0][1])
 		if newPopulation.selectionResults[0][1] > maxProfit:
 			maxProfit = newPopulation.selectionResults[0][1]
-			print numGenerations
+			print "Generation: ",numGenerations
 			print "Standard Deviation: ", statistics.pstdev(standardDeviation)
 			print "New Max: " ,maxProfit, "Length: ", newPopulation.selectionResults[0][0][1], newPopulation.selectionResults[0][0][2], " Max Return: ", ((maxProfit + newPopulation.firstSpend) /newPopulation.firstSpend) * 100, " Buy: ", newPopulation.BUY
 
