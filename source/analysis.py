@@ -191,9 +191,10 @@ class Population:
 def start_algorithm():
 	newPopulation = Population();
 	maxProfit = 0
-	standardDeviation = []
+
 	numGenerations = 0
 	while(numGenerations < 1000000):
+		standardDeviation = []
 		print numGenerations
 		newPopulation.evaluate()
 		standardDeviation.append(newPopulation.selectionResults[0][1])
