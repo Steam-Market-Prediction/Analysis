@@ -7,7 +7,7 @@ from shapely.geometry import LineString
 from random import randint
 import statistics
 
-with open('Market List/Mantle of the Cinder Baron.txt') as data_file:
+with open('Market List/Fiery Soul of the Slayer.txt') as data_file:
 	data = json.load(data_file);
 #data['prices'][DATE][PRICE]
 
@@ -61,6 +61,7 @@ plt.show()
 class Population:
 
 	def __init__(self):
+		self.standardDeviation = []
 		self.firstBUY = True
 		self.firstSpend = 0
 		self.listOfMovingAVG = []
@@ -105,6 +106,7 @@ class Population:
 			tempProfit = 0
 
 			for item in intersect_points:
+				self.standardDeviation.append(item[1])
 				if pair[1] > pair[2]: # first is short term, second is long term
 					if pair[0][0][listOfXinl1.index((float(int(item[0]) + 1)))][1] > pair[0][1][listOfXinl2.index((float(int(item[0]) + 1)))][1]:
 						tempProfit = tempProfit - item[1] #buy
@@ -192,16 +194,14 @@ def start_algorithm():
 	newPopulation = Population();
 	maxProfit = 0
 	numGenerations = 0
-	standardDeviation = []
 	while(numGenerations < 2000):
 		newPopulation.evaluate()
-		standardDeviation.append(newPopulation.selectionResults[0][1])
 		if newPopulation.selectionResults[0][1] > maxProfit:
 			maxProfit = newPopulation.selectionResults[0][1]
 			print "Generation: ",numGenerations
-			print "Standard Deviation: ", statistics.pstdev(standardDeviation)
+			print "Standard Deviation: ", statistics.pstdev(newPopulation.standardDeviation)
 			print "New Max: " ,maxProfit, "Length: ", newPopulation.selectionResults[0][0][1], newPopulation.selectionResults[0][0][2], " Max Return: ", ((maxProfit + newPopulation.firstSpend) /newPopulation.firstSpend) * 100, " Buy: ", newPopulation.BUY
-
+		print numGenerations
 		newPopulation.select()
 		newPopulation.crossover()
 		newPopulation.mutate()
