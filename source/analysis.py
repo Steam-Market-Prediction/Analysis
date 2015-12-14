@@ -5,13 +5,14 @@ import numpy as np
 import random
 from shapely.geometry import LineString
 from random import randint
+import statistics
 
-with open('Market List/Dragonclaw Hook.txt') as data_file:
+with open('Market List/Mantle of the Cinder Baron.txt') as data_file:
 	data = json.load(data_file);
 #data['prices'][DATE][PRICE]
 
-POPULATION_SIZE = 10
-BUY = False
+POPULATION_SIZE = 50
+
 def generateRandomPopulation():
 	population = []
 	lower = 20
@@ -49,17 +50,21 @@ def getTotalAVG():
 		totalAVG = listOfPoints[x] + totalAVG
 
 	return totalAVG/len(data["prices"])
-#a = getMovingAVG(3)
-#b = getMovingAVG(15)
-#plt.plot(*zip(*a))
-#plt.plot(*zip(*b))
-#plt.show()
+'''
+a = getMovingAVG(31)
+b = getMovingAVG(36)
+plt.plot(*zip(*a))
+plt.plot(*zip(*b))
+plt.show()
+'''
 
 class Population:
 
 	def __init__(self):
-		
+		self.firstBUY = True
+		self.firstSpend = 0
 		self.listOfMovingAVG = []
+		self.BUY = True
 		self.listOfMovingLength = generateRandomPopulation()
 		for x in xrange(0,len(self.listOfMovingLength),2):
 			newTuple = (getMovingAVG(self.listOfMovingLength[x]),getMovingAVG(self.listOfMovingLength[x+1]))
@@ -67,6 +72,9 @@ class Population:
 		
 
 	def evaluate(self):
+		self.firstBUY = True
+		self.BUY = None
+		self.firstSpend = 0
 		self.selectionResults = []
 		for pair in self.listOfMovingAVG:
 			currentStock = 0
@@ -101,20 +109,26 @@ class Population:
 					if pair[0][0][listOfXinl1.index((float(int(item[0]) + 1)))][1] > pair[0][1][listOfXinl2.index((float(int(item[0]) + 1)))][1]:
 						tempProfit = tempProfit - item[1] #buy
 						currentStock = currentStock + 1
-						BUY = True
+						if self.firstBUY is True:
+							self.firstSpend = item[1]
+							self.firstBUY = False
+						self.BUY = True
 					else:
 						tempProfit = tempProfit + (item[1] * currentStock) #sell
 						currentStock = 0
-						BUY = False
+						self.BUY = False
 				else: # x is long term, y is short term
 					if pair[0][1][listOfXinl2.index((float(int(item[0]) + 1)))][1] > pair[0][0][listOfXinl1.index((float(int(item[0]) + 1)))][1]:
 						tempProfit = tempProfit + (item[1] * currentStock) #selectionResults
 						currentStock = 0
-						BUY = False
+						self.BUY = False
 					else:
 						tempProfit = tempProfit - item[1] #buy
 						currentStock = currentStock + 1
-						BUY = True
+						if self.firstBUY is True:
+							self.firstSpend = item[1]
+							self.firstBUY = False
+						self.BUY = True
 
 
 			evaluatePairFitness = (pair, tempProfit)
@@ -177,16 +191,22 @@ class Population:
 def start_algorithm():
 	newPopulation = Population();
 	maxProfit = 0
-	while(1):
+	standardDeviation = []
+	numGenerations = 0
+	while(numGenerations < 1000000):
+		print numGenerations
 		newPopulation.evaluate()
-
+		standardDeviation.append(newPopulation.selectionResults[0][1])
 		if newPopulation.selectionResults[0][1] > maxProfit:
 			maxProfit = newPopulation.selectionResults[0][1]
-			print "New Max: " ,maxProfit, "Length: ", newPopulation.selectionResults[0][0][1], newPopulation.selectionResults[0][0][2], "Buy: ", BUY
+			print numGenerations
+			print "Standard Deviation: ", statistics.pstdev(standardDeviation)
+			print "New Max: " ,maxProfit, "Length: ", newPopulation.selectionResults[0][0][1], newPopulation.selectionResults[0][0][2], " Max Return: ", ((maxProfit + newPopulation.firstSpend) /newPopulation.firstSpend) * 100, " Buy: ", newPopulation.BUY
 
 		newPopulation.select()
 		newPopulation.crossover()
 		newPopulation.mutate()
+		numGenerations = numGenerations + 1
 
 if __name__ == "__main__":
 	start_algorithm()
