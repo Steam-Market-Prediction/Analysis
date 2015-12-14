@@ -201,7 +201,6 @@ def start_algorithm():
 			print "Generation: ",numGenerations
 			print "Standard Deviation: ", statistics.pstdev(newPopulation.standardDeviation)
 			print "New Max: " ,maxProfit, "Length: ", newPopulation.selectionResults[0][0][1], newPopulation.selectionResults[0][0][2], " Max Return: ", ((maxProfit + newPopulation.firstSpend) /newPopulation.firstSpend) * 100, " Buy: ", newPopulation.BUY
-		print numGenerations
 		newPopulation.select()
 		newPopulation.crossover()
 		newPopulation.mutate()
